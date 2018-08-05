@@ -1,2 +1,3 @@
-# pymathpuzzles
-Repository to store python solutions for math puzzles
+# Math Puzzles solved by coding
+
+Repository to store solutions for math puzzles
