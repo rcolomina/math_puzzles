@@ -1,3 +1,3 @@
 # Math Puzzles solved by coding
 
-Repository to store solutions for math puzzles
+Repository to store programming problems and puzzles of maths and cryptography.
