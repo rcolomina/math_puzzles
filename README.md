@@ -1,3 +1,7 @@
-# Math Puzzles solved by coding
+# Math Puzzles Solved by Coding
 
-Repository to store programming problems and puzzles of maths and cryptography.
+This repository is dedicated to programs recreational puzzles about maths and cryptography.
+
+# Cryptography
+
+## Undertanding Cryptography Problems
