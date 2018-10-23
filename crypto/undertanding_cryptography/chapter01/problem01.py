@@ -28,13 +28,9 @@ for this task. However, a paper and pencil approach is also still double.
 of the English language
 
 A 0.0817 B 0.0150 C 0.0278 D 0.0425 E 0.1270 F 0.0223
-
 G 0.0202 H 0.0609 I 0.0697 J 0.0015 K 0.0077 L 0.0403
-
 M 0.0241 N 0.0675 O 0.0751 P 0.0193 Q 0.0010 R 0.0599
-
 S 0.0633 T 0.0906 U 0.0276 V 0.0098 W 0.0236 X 0.0015
-
 Y 0.0197 Z 0.0007
 
 Note that the text is relatively short and that the letter frequenies in it might not perfectly align with that of general English language from the table.
@@ -61,10 +57,12 @@ class FrequencyAnalysis:
 
         sentenceNoSpaces = [x for x in self.sentence if x != ' ']        
         totalLetters = len(sentenceNoSpaces)
-        
+
+        #print(totalLetters)
         for letter in self.alphabet:
-            freqTable[letter] = list(sentenceNoSpaces).count(letter) / totalLetters
-            
+            countingLetter = list(sentenceNoSpaces).count(letter)
+            freqLetter = float(countingLetter) / float(totalLetters)
+            freqTable[letter] = freqLetter 
         return freqTable
     
 
@@ -95,21 +93,22 @@ if __name__ == "__main__":
     print("Reference Table of Frequencies sorted")
     refFreqSorted = sorted(refTableOfFreq.items(), key=lambda kv:kv[1])
     refKeysSorted = [pair[0] for pair in refFreqSorted]
-    
+    #print(refFreqSorted)
 
     print("Calculated Table of Frequencies sorted")
     calFreqSorted = sorted(calTableOfFreq.items(), key=lambda kv:kv[1])
     calKeysSorted = [pair[0] for pair in calFreqSorted] 
-
+    #print(calFreqSorted)
+    
     # Create map to decrypt
     mapDecrypt = {}
     for pair in zip(refKeysSorted,calKeysSorted):
         keyClear = pair[0]
-        keyCypher= pair[1]
-                
+        keyCypher= pair[1]                
         mapDecrypt[keyCypher] = keyClear
-            
-    print("Start to decypher text:")
+
+    print("-------")
+    print("Appliying frequency table to try a first attempt to decypher the text")
 
     def decrypt(mapDecrypt):
         clearText=""
