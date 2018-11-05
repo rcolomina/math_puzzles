@@ -14,5 +14,5 @@ http://khosach.info/store/msresource/it/book/Understanding-Cryptography.pdf
 
 #### Exercise 1
 
-The problem suggest to use the tools at https://www.cryptool.org/en/ but the solution has been implemented using python 3. 
+The problem text suggest the usage of https://www.cryptool.org/en/ but this repository solution has used python3. 
 
