@@ -6,7 +6,7 @@ This repository is dedicated to programs recreational puzzles about maths and cr
 
 ## Undertanding Cryptography Problems
 
-This section is dedicated to store solutions to the exercises in the book that can be found in the following link:
+This section is dedicated to store solutions of book exercises found at the following link:
 
 http://khosach.info/store/msresource/it/book/Understanding-Cryptography.pdf
 
