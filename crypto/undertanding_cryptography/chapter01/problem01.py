@@ -125,7 +125,7 @@ if __name__ == "__main__":
     
     # Extra transpositon on mapDecrypt
     print("-----")
-    print("After some transpositions interpreting the results")
+    print("After some transpositions after interpreting the results from first case above")
     print("-----")
     
     mapDecrypt['l']='b'
