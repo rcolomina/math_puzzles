@@ -2,11 +2,18 @@
 
 This repository is dedicated to programs recreational puzzles about maths and cryptography.
 
+# Combinatory
+
+Folder dedicated to computational combinatory.
+
+
 # Cryptography
+
+Folder deticated to cryptography problems.
 
 ## Undertanding Cryptography Problems
 
-This section is dedicated to store solutions of book exercises found at the following link:
+This folder section is dedicated to store solutions of book exercises found at the following link:
 
 http://khosach.info/store/msresource/it/book/Understanding-Cryptography.pdf
 
