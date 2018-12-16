@@ -87,9 +87,10 @@ TreeNode* createTreeExpression(list<int> exp){
 
 int main(){
 
-    list<int> myexp = {-1,-1,73,-1,33,-1,-1,43,125};
-    
+    // Create a tree using 
+    list<int> myexp = {-1,-1,73,-1,33,-1,-1,43,125};    
     TreeNode *nodeGen=createTreeExpression(myexp);
+    
     nodeGen->print_dfs();
     
     //TreeNode *root1 = create_tree_test_1();
