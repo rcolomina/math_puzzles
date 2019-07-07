@@ -1,0 +1,40 @@
+
+\title{Amazing Integration Result}
+
+\author{Ruben Colomina}
+\date{\today}
+
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+
+\begin{document}
+\maketitle
+Is it possible to calculate the integral of the function $(-1)^x$ over the interval $[0,1]$?. What is its value?. Let's write formally the expression to integrate:
+\begin{equation}
+\int_0^1 (-1)^x\;\mathrm{d}x \label{eq:1}
+\end{equation}
+The function $(-1)^x$ takes complex values over the interval $[0,1]$ e.g. $(-1)^{1/2} = i$. First thing to do is to check whether the integral exist or not. In order to check this, there is a result about Lebesgue measurable functions: ``A function is integrable when is absolutely value is integrable'', which is something trivial to check in our case:
+\begin{equation*}
+\int_0^1 |(-1)^x| \;\mathrm{d}x \leq \int_0^1 1\;\mathrm{d}x = 1
+\end{equation*}
+
+At this stage we can assure that the integral exist taking a finite value which has an absolute value less than 1. Now, let's figure out what is its value. Euler's identity may help in this regard. Let's refresh our minds on this identity as follows:
+\begin{equation}
+e^{i \pi} + 1 = 0 \label{eq:2}
+\end{equation}
+Using \eqref{eq:2} within the function in \eqref{eq:1}:
+\begin{equation}
+\int_0^1 (-1)^x\;\mathrm{d}x = \int_0^1 e^{i \pi x}\;\mathrm{d}x \label{eq:3} 
+\end{equation}
+But the right term of \eqref{eq:3} is trivial to solve:
+\begin{equation}
+\int_0^1 e^{i \pi x}\;\mathrm{d}x =  \frac{e^{i \pi x}}{i \pi} \Biggr|_{0}^{1} = \frac{e^{i \pi}}{i \pi} - \frac{1}{i \pi} = \frac{-1}{i \pi} - \frac{1}{i \pi} = - \frac{2}{i \pi} = \frac{2 i}{\pi}  \label{eq:4} 
+\end{equation}
+Finally, taking absolute values, $|\frac{2 i}{\pi}| = \frac{2}{\pi} < 1$ as we were expecting.
+
+
+
+
+
+\end{document}
+
