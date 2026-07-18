@@ -2,6 +2,8 @@
 #include <vector>
 #include <cmath>
 
+#include "../common/log.h"
+
 using namespace std;
 
 /*
@@ -36,7 +38,7 @@ int min_diff_array(vector<int> A){
         {
             diff = abs(leftSum-rightSum);
         }
-        cout<<abs(leftSum-rightSum)<<endl;
+        LOG_DEBUG("split at p=" << p << " -> |L-R| = " << abs(leftSum-rightSum));
 
     }
     //cout<<endl;
@@ -53,12 +55,12 @@ int main(){
     vector<int> test5= {1,2,3,2,100};
     vector<int> test6= {-1,-2,-3,2,100,50};
         
-    cout<<"Test :"<<" -> pmax "<<min_diff_array(test1)<<endl;
-    cout<<"Test :"<<" -> pmax "<<min_diff_array(test2)<<endl;
-    cout<<"Test :"<<" -> pmax "<<min_diff_array(test3)<<endl;
-    cout<<"Test :"<<" -> pmax "<<min_diff_array(test4)<<endl;
-    cout<<"Test :"<<" -> pmax "<<min_diff_array(test5)<<endl;
-    cout<<"Test :"<<" -> pmax "<<min_diff_array(test6)<<endl;
+    LOG_INFO("test1 -> min diff " << min_diff_array(test1));
+    LOG_INFO("test2 -> min diff " << min_diff_array(test2));
+    LOG_INFO("test3 -> min diff " << min_diff_array(test3));
+    LOG_INFO("test4 -> min diff " << min_diff_array(test4));
+    LOG_INFO("test5 -> min diff " << min_diff_array(test5));
+    LOG_INFO("test6 -> min diff " << min_diff_array(test6));
 
     return 0;
 }

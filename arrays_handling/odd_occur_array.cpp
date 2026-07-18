@@ -2,6 +2,8 @@
 #include <map>
 #include <iostream>
 
+#include "../common/log.h"
+
 using namespace std;
 
 // O(n) version using key-value
@@ -31,7 +33,7 @@ int find_odd_occur_array_xor(vector<int> &A){
     for(int i=1;i<size;++i){
         int element=A[i];
         myret = myret ^ element;
-        //cout<<" "<<myret;
+        LOG_DEBUG("xor after index " << i << " = " << myret);
     }
     return myret;    
 }
@@ -41,8 +43,8 @@ int main(){
 
     vector<int> A = {9,3,9,3,9,7,9};
 
-    cout<<"find_odd_occur_array -> "<<find_odd_occur_array(A)<<endl; 
-    cout<<"find_odd_occur_array_xor -> "<<find_odd_occur_array_xor(A)<<endl;
+    LOG_INFO("find_odd_occur_array -> " << find_odd_occur_array(A));
+    LOG_INFO("find_odd_occur_array_xor -> " << find_odd_occur_array_xor(A));
      
     
 }

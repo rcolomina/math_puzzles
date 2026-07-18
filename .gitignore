@@ -1,1 +1,18 @@
+# Editor backups
 *~
+
+# LaTeX build artifacts (the compiled *.pdf is kept)
+*.aux
+*.log
+*.toc
+*.out
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Rust build output
+crypto/elgamal-rust/target/
+
+# Compiled C++ puzzle binaries are ignored per-topic (see */.gitignore),
+# so they are rebuilt from source with `make`.

@@ -3,6 +3,8 @@
 #include <utility>
 #include <algorithm>
 
+#include "../common/log.h"
+
 using namespace std;
    
 class TreeNode{
@@ -20,14 +22,14 @@ public:
             pair<TreeNode*,long> topitem = mystack.top();
             mystack.pop();
             long level = topitem.second;
-            cout<<"value = "<<topitem.first->x<<" level = "<<level<<endl;
+            LOG_INFO("value = " << topitem.first->x << " level = " << level);
             TreeNode *tree=topitem.first;
             if(tree->l != NULL){
-                cout<<topitem.first->x<<" has left child "<<tree->l->x<<endl;
+                LOG_DEBUG(topitem.first->x << " has left child " << tree->l->x);
                 mystack.push(make_pair(tree->l,level+1));
             }
             if(tree->r != NULL){
-                cout<<topitem.first->x<<" has righ child "<<tree->r->x<<endl;
+                LOG_DEBUG(topitem.first->x << " has right child " << tree->r->x);
                 mystack.push(make_pair(tree->r,level+1));
             }
         }
@@ -48,7 +50,7 @@ public:
             mystack.pop();
             if(topitem.first->x >= topitem.second){
                 countVisible++;
-                cout<<"this is a visible node "<<topitem.first->x<<endl;
+                LOG_DEBUG("visible node " << topitem.first->x);
             }
               
             long currentMax=topitem.second;

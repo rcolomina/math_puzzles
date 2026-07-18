@@ -1,0 +1,335 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+
+% --- helpers --------------------------------------------------------------
+% Inline file / identifier reference (handles underscores safely).
+\newcommand{\file}[1]{\texttt{\detokenize{#1}}}
+
+% A puzzle entry: fields are filled with the \field macro below.
+\newcommand{\field}[2]{\smallskip\noindent\textbf{#1:}\ #2\par}
+
+% Status badges.
+\newcommand{\statusok}{\textcolor{green!55!black}{\textbf{working}}}
+\newcommand{\statusstub}{\textcolor{orange!85!black}{\textbf{stub}}}
+\newcommand{\statuswip}{\textcolor{red!75!black}{\textbf{work in progress}}}
+
+\title{\textbf{Math Puzzles}\\[2pt]\large Problem \& Solution Index}
+\author{Ruben Colomina}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+This document indexes the recreational mathematics, algorithm, and
+cryptography puzzles collected in the \file{math_puzzles} repository. Each
+topic maps to a self-contained directory; every puzzle below records its
+problem statement, the idea behind the solution, its computational cost, the
+source files involved, and its current status. See
+Section~\ref{sec:intro} for how the collection is organised, built, and
+extended.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% =========================================================================
+\section{Introduction and Conventions}\label{sec:intro}
+
+The repository is a personal collection of puzzles grouped \emph{by topic}
+rather than by language. Solutions are written in C++, Python, and Rust
+depending on the problem. Many originate from Codility lessons and from the
+book \emph{Understanding Cryptography}.
+
+\subsection*{Layout}
+Each top-level directory is an independent topic. Shared tooling lives in
+\file{common/}:
+\begin{itemize}[nosep]
+  \item \file{common/log.h} --- header-only leveled logging for C++.
+  \item \file{common/log.py} --- matching logging helper for Python.
+  \item \file{common/topic.mk} --- shared Make rules every topic Makefile includes.
+\end{itemize}
+
+\subsection*{Building and running}
+A root \file{Makefile} auto-discovers every topic directory that includes
+\file{common/topic.mk}:
+\begin{itemize}[nosep]
+  \item \texttt{make} or \texttt{make build} --- compile every C++ topic.
+  \item \texttt{make run} --- build, then run every solution.
+  \item \texttt{make clean} --- remove built binaries.
+  \item \texttt{make docs} --- rebuild this PDF.
+\end{itemize}
+Every \file{*.cpp} in a topic builds to a binary of the same base name, so a
+new source file is picked up with no Makefile edits.
+
+\subsection*{Logging}
+Diagnostic output is routed through the shared loggers and gated by the
+\texttt{VERBOSE} environment variable (levels: \texttt{0}=error,
+\texttt{1}=warn, \texttt{2}=info [default], \texttt{3}=debug). Final answers
+are logged at \emph{info}; step-by-step traces at \emph{debug}:
+\begin{center}
+\texttt{./odd\_occur\_array} \quad vs. \quad \texttt{VERBOSE=3 ./odd\_occur\_array}
+\end{center}
+
+\subsection*{Adding a new puzzle}
+The helper \file{scripts/new_puzzle.sh} scaffolds a new puzzle already wired
+into the build and logging conventions:
+\begin{center}
+\texttt{scripts/new\_puzzle.sh <topic> <name> [cpp|py]}
+\end{center}
+For a C++ puzzle it stamps out a logging-ready source file and, for a new
+topic, a one-line Makefile that inherits the shared rules --- after which the
+root build discovers it automatically.
+
+% =========================================================================
+\section{Arrays Handling}
+Directory \file{arrays_handling/} --- classic linear-scan array puzzles.
+
+\subsection{Minimum split difference}
+\field{Problem}{Given an array $A$ of $N$ integers, split it at some index
+$p$ ($1 \le p < N$) into a left part $A[0..p-1]$ and a right part
+$A[p..N-1]$. Minimise the absolute difference
+$\bigl|\sum_{\text{left}} - \sum_{\text{right}}\bigr|$.}
+\field{Approach}{Compute the total right sum once, then sweep $p$ from left to
+right, moving one element from the right sum into the left sum at each step and
+tracking the minimum absolute difference. This turns a naive
+$O(N^2)$ recomputation into a single pass.}
+\field{Complexity}{$O(N)$ time, $O(1)$ extra space.}
+\field{Files}{\file{min_split_diff.cpp}}
+\field{Status}{\statusok}
+
+\subsection{Missing element}
+\field{Problem}{An array contains $N$ distinct integers taken from
+$\{1,\dots,N+1\}$ with exactly one value missing. Find the missing value.}
+\field{Approach}{The sum of $1,\dots,N+1$ is $\tfrac{(N+1)(N+2)}{2}$. Subtract
+the actual array sum from this closed-form total; the difference is the
+missing element. Wide integer types guard against overflow for large $N$.}
+\field{Complexity}{$O(N)$ time, $O(1)$ extra space.}
+\field{Files}{\file{missing_element.cpp}}
+\field{Status}{\statusok\ (the sum method is correct; the bundled test driver
+feeds values $2,\dots,N+1$ rather than $1,\dots,N+1$, so its printed number is
+illustrative of the mechanics rather than a clean demo)}
+
+\subsection{Odd occurrence in an array}
+\field{Problem}{Every value in the array appears an even number of times
+except one, which appears an odd number of times (in the unpaired variant,
+exactly once). Find that value.}
+\field{Approach}{Two solutions are provided: a map-based count that returns the
+value seen an odd number of times, and the classic XOR fold --- XOR-ing all
+elements cancels paired values ($x \oplus x = 0$), leaving the lone value.}
+\field{Complexity}{Map: $O(N\log N)$ / $O(N)$ space. XOR: $O(N)$ time,
+$O(1)$ space.}
+\field{Files}{\file{odd_occur_array.cpp}}
+\field{Status}{\statusok}
+
+% =========================================================================
+\section{Counting Elements}
+Directory \file{counting_elements/}.
+
+\subsection{Smallest missing positive integer}
+\field{Problem}{Given an array of integers (possibly negative or duplicated),
+find the smallest positive integer that does \emph{not} occur in it. For
+example $[1,3,6,4,1,2] \to 5$ and $[-1,-3] \to 1$.}
+\field{Approach}{Insert the values into an ordered set, discard everything
+$\le 0$, and walk the remaining positive values looking for the first gap:
+if the adjacent difference exceeds $1$ (or the sequence does not start at
+$1$), the missing integer sits in that gap.}
+\field{Complexity}{$O(N\log N)$ time (set construction).}
+\field{Files}{\file{missingint.cpp}}
+\field{Status}{\statusok}
+
+% =========================================================================
+\section{Stacks and Queues}
+Directory \file{stack_queues/}.
+
+\subsection{Fish competition}
+\field{Problem}{$N$ fish move along a river; each has a size $A[i]$ and a
+direction $B[i]$ ($1$ = downstream, $0$ = upstream). When a downstream fish
+meets an upstream one they fight and the larger eats the smaller. How many
+fish survive?}
+\field{Approach}{Scan the fish left to right maintaining a stack of survivors.
+A downstream fish on top of the stack meeting an upstream incoming fish
+triggers a fight loop that pops eaten fish; otherwise the fish is pushed.
+Fish that never meet an opponent survive automatically.}
+\field{Complexity}{$O(N)$ time, $O(N)$ space.}
+\field{Files}{\file{fish_compet.cpp}}
+\field{Status}{\statusok}
+
+\subsection{Properly nested brackets}
+\field{Problem}{Given a string of the brackets \texttt{()[]\{\}}, decide
+whether it is properly nested.}
+\field{Approach}{The iterative solution pushes opening brackets onto a stack
+and pops on a matching closer; the string is well-formed iff the stack ends
+empty. A recursive variant is also sketched in the file.}
+\field{Complexity}{Iterative: $O(N)$ time, $O(N)$ space.}
+\field{Files}{\file{properly_nested.cpp}}
+\field{Status}{\statusok\ (iterative solver; the recursive variant is
+experimental)}
+
+% =========================================================================
+\section{Graph and Tree Algorithms}
+Directory \file{graph_algorithms/}.
+
+\subsection{Visible nodes in a binary tree}
+\field{Problem}{A node in a binary tree is \emph{visible} if no node on the
+path from the root to it holds a strictly greater value. Count the visible
+nodes.}
+\field{Approach}{An explicit stack performs a depth-first traversal carrying
+the maximum value seen so far along each root-to-node path; a node is counted
+when its value is at least that running maximum. The \file{binary_tree.h}
+header defines the \texttt{TreeNode} type together with DFS printing and the
+visibility count.}
+\field{Complexity}{$O(N)$ time, $O(h)$ stack space for height $h$.}
+\field{Files}{\file{visible_nodes_bin_tree.cpp}, \file{binary_tree.h}}
+\field{Status}{\statusok}
+
+\subsection{Word machine (reverse-polish stack calculator)}
+\field{Problem}{Evaluate a whitespace-separated program of integers and the
+operators \texttt{POP}, \texttt{DUP}, \texttt{+}, \texttt{-} against a stack
+machine, returning the value left on top.}
+\field{Approach}{Tokenise the input and fold it over a stack: numbers are
+pushed, operators consume and push results. The intended algorithm is present
+but the driver still short-circuits and does not compile cleanly, so it is
+excluded from the default build.}
+\field{Complexity}{$O(T)$ time in the number of tokens $T$ (target).}
+\field{Files}{\file{word_machine.cpp}}
+\field{Status}{\statuswip}
+
+% =========================================================================
+\section{Codility Tests}
+Directory \file{codility_test/}.
+
+\subsection{Allocate families}
+\field{Problem}{An aircraft has $N$ rows of seats laid out
+\texttt{ABC~DEFG~HJK}. Given the already-reserved seats, count how many
+3-person families can be seated together (each family in three adjacent seats
+within one of the blocks \texttt{ABC}, \texttt{DEF}/\texttt{EFG}, or
+\texttt{HJK}).}
+\field{Approach}{Parse the reserved seats into a per-row occupancy grid, then
+for each row check which of the three seat blocks remain fully free and tally
+the achievable family placements.}
+\field{Complexity}{$O(N + R)$ time for $R$ reservations.}
+\field{Files}{\file{allocate_families.cpp}}
+\field{Status}{\statusok}
+
+\subsection{Weeks in Hawaii}
+\field{Problem}{Placeholder for a date/interval Codility task.}
+\field{Approach}{Not yet implemented --- the solution body is empty. Retained
+as a stub so the intended task is tracked.}
+\field{Complexity}{---}
+\field{Files}{\file{weeks_in_hawaii.cpp}}
+\field{Status}{\statusstub}
+
+% =========================================================================
+\section{Combinatorics}
+Directory \file{combinatory/}.
+
+\subsection{Cutting strings}
+\field{Problem}{Enumerate every way to insert dash separators between the
+characters of a string, e.g. \texttt{"12345"} yields
+\texttt{"12345"}, \texttt{"1234-5"}, \dots, \texttt{"1-2-3-4-5"}.}
+\field{Approach}{Each of the $n-1$ gaps between characters is independently
+either a cut or not, giving $2^{\,n-1}$ splits. \texttt{itertools.product}
+enumerates the binary choice vectors and each is rendered into a dashed
+string.}
+\field{Complexity}{$O(n \cdot 2^{\,n-1})$ to materialise all splits.}
+\field{Files}{\file{cutting_strings.py}}
+\field{Status}{\statusok}
+
+% =========================================================================
+\section{Parallel Computing}
+Directory \file{parallel_compu_primes/}.
+
+\subsection{Parallel prime sieve (OpenMP)}
+\field{Problem}{Determine primality for every integer below
+$10^{6}$, using multiple CPU threads.}
+\field{Approach}{An OpenMP \texttt{parallel for} distributes trial-division
+primality tests across threads, filling a boolean array; the primes just below
+the ceiling are then reported. Compiled with \texttt{-fopenmp} via the topic
+Makefile.}
+\field{Complexity}{$O\!\left(\sum_{n} \sqrt{n}\right)$ work, divided across
+threads.}
+\field{Files}{\file{primes.cpp}}
+\field{Status}{\statusok}
+
+% =========================================================================
+\section{Cryptography}
+Directory \file{crypto/}.
+
+\subsection{Special-sum cryptarithm}
+\field{Problem}{Find distinct positive digits $A,B,C$ such that the addition
+\[
+\underline{AAA} + \underline{BBB} + \underline{CCC} = \underline{BAAC}
+\]
+holds, where each letter denotes a repeated digit.}
+\field{Approach}{The equation reduces to
+$111(A+B+C) = 1000B + 110A + C$. A brute-force search over all distinct digit
+triples $(A,B,C)$ checks this identity; the solution is
+$(A,B,C) = (9,1,8)$.}
+\field{Complexity}{$O(9^3)$ constant-bounded search.}
+\field{Files}{\file{special_sum/special_sum.py}}
+\field{Status}{\statusok}
+
+\subsection{Substitution cipher --- frequency analysis}
+\field{Problem}{\emph{Understanding Cryptography}, Exercise 1.1: recover the
+plaintext of a mono-alphabetic substitution cipher without the key.}
+\field{Approach}{Compute the relative frequency of each ciphertext letter and
+align it, in sorted order, against the known frequency distribution of English
+letters to seed a decryption map. A few manual transpositions, guided by the
+partially readable output, complete the mapping and reveal the plaintext
+(a passage on Okinawan karate).}
+\field{Complexity}{$O(L)$ for text length $L$, plus a small manual refinement.}
+\field{Files}{\file{undertanding_cryptography/chapter01/problem01.py}}
+\field{Status}{\statusok}
+
+\subsection{ElGamal encryption (Rust)}
+\field{Problem}{Demonstrate ElGamal public-key encryption over an elliptic
+curve: generate a key pair, encrypt a message point, and verify that
+decryption recovers it.}
+\field{Approach}{A Cargo project using the \texttt{rust-elgamal} and
+\texttt{rand} crates builds a decryption key, derives the encryption key,
+encrypts a scalar multiple of the generator, and asserts that decryption
+returns the original point.}
+\field{Complexity}{Group-operation bound of the underlying curve arithmetic.}
+\field{Files}{\file{elgamal-rust/src/main.rs}}
+\field{Status}{\statusok\ (built with \texttt{cargo build} / \texttt{cargo run})}
+
+% =========================================================================
+\section{Miscellaneous}
+
+\subsection{The integral of $(-1)^x$ over $[0,1]$}
+\field{Problem}{Evaluate $\displaystyle\int_0^1 (-1)^x\,\mathrm{d}x$, where the
+integrand takes complex values.}
+\field{Approach}{Existence follows because $|(-1)^x| \le 1$ is integrable.
+Writing $(-1)^x = e^{i\pi x}$ via Euler's identity gives
+\[
+\int_0^1 e^{i\pi x}\,\mathrm{d}x
+  = \left.\frac{e^{i\pi x}}{i\pi}\right|_0^1
+  = \frac{2i}{\pi},
+\]
+whose modulus $\tfrac{2}{\pi} < 1$ matches the bound. A full write-up is in
+\file{integrate/amazing_integral.tex}.}
+\field{Complexity}{---}
+\field{Files}{\file{integrate/amazing_integral.tex}}
+\field{Status}{\statusok\ (LaTeX write-up)}
+
+\subsection{Alea --- a threaded pseudo-random generator}
+\field{Problem}{Provide a linear-congruential pseudo-random number generator
+that can be driven either serially or by a background producer thread feeding
+a shared queue.}
+\field{Approach}{The header \file{random_numbers/alea.h} declares an
+\texttt{Alea} class wrapping LCG constants and a circular buffer / deque, with
+a \texttt{pthread}-based producer for the parallel path.}
+\field{Complexity}{$O(1)$ amortised per generated number.}
+\field{Files}{\file{random_numbers/alea.h}}
+\field{Status}{\statusok\ (header-only helper)}
+
+\end{document}

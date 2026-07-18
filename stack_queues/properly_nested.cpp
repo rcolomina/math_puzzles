@@ -1,11 +1,8 @@
-// you can use includes, for example:
-// #include <algorithm>
 #include <stack>
-// you can write to stdout for debugging purposes, e.g.
-// cout << "this is a debug message" << endl;
-
 #include <string>
 #include <iostream>
+
+#include "../common/log.h"
 
 using namespace std;
 
@@ -20,14 +17,14 @@ int iter_solution(string &S) {
     {
         // check top of the stack
         char c=*it;
-        //cout<<"Char "<<c<<endl;        
+        LOG_DEBUG("char " << c);
         if(c=='(' || c=='[' || c=='{')
         {
             mystack.push(c);
         }
         if(!mystack.empty())
         {
-            //cout<<"top "<<mystack.top()<<endl;           
+            LOG_DEBUG("stack top " << mystack.top());
             if((mystack.top()=='(' && c==')') || (mystack.top()=='[' && c==']') || (mystack.top()=='{' && c=='}'))
                 mystack.pop();
 
@@ -77,27 +74,27 @@ int main(){
 
     string S="[[]]";
     bool nested=iter_solution(S);
-    cout<<"(iter) properly nested:"<<nested<<endl;
+    LOG_INFO("(iter) properly nested: " << nested);
     nested=iter_solution(S);    
-    cout<<"(recut) properly nested:"<<nested<<endl;
+    LOG_INFO("(recur) properly nested: " << nested);
     
     S="[([)]";
     nested=iter_solution(S);
-    cout<<"(iter) properly nested:"<<nested<<endl;
+    LOG_INFO("(iter) properly nested: " << nested);
     nested=iter_solution(S);    
-    cout<<"(recut) properly nested:"<<nested<<endl;
+    LOG_INFO("(recur) properly nested: " << nested);
 
     S="[{[]}][[()]]";
     nested=iter_solution(S);
-    cout<<"(iter) properly nested:"<<nested<<endl;
+    LOG_INFO("(iter) properly nested: " << nested);
     nested=iter_solution(S);    
-    cout<<"(recut) properly nested:"<<nested<<endl;
+    LOG_INFO("(recur) properly nested: " << nested);
 
     S="[][]";
     nested=iter_solution(S);
-    cout<<"(iter) properly nested:"<<nested<<endl;
+    LOG_INFO("(iter) properly nested: " << nested);
     nested=iter_solution(S);    
-    cout<<"(recut) properly nested:"<<nested<<endl;
+    LOG_INFO("(recur) properly nested: " << nested);
     
     
     

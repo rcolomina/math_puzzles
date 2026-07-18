@@ -1,0 +1,7 @@
+# Build outputs — rebuilt by `make` (see ../common/topic.mk).
+# Ignore everything, then keep sources and build files.
+*
+!.gitignore
+!Makefile
+!*.cpp
+!*.h

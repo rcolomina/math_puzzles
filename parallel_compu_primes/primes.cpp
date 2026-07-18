@@ -1,6 +1,8 @@
 #include <iostream>
 #include <omp.h>
 
+#include "../common/log.h"
+
 const int MAXNUM= 1000000;
 bool isPrime(int);
 
@@ -24,7 +26,7 @@ int main(){
 #pragma omp parallel
      {
 	  if(omp_get_thread_num() == 0)
-	       std::cout << "Working with " << omp_get_num_threads() << " threads " << std::endl;
+	       LOG_INFO("working with " << omp_get_num_threads() << " threads");
 #pragma omp for
 	  for(int n=0; n < MAXNUM; ++n)
 	       bPrimes[n] = isPrime(n);
@@ -32,7 +34,7 @@ int main(){
 
      for(int n=MAXNUM-100; n<MAXNUM; ++n)
 	  if(bPrimes[n])
-	       std::cout << n << std::endl;
+	       LOG_INFO("prime near MAXNUM: " << n);
 }
 
 

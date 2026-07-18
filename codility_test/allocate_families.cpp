@@ -7,6 +7,8 @@
 #include <sstream>
 #include <iterator>
 
+#include "../common/log.h"
+
 /* Task to do
 
 Allocate families in a place.
@@ -51,7 +53,7 @@ int solution(int N, string &S){
         string seat = seats[i];
         char col = seat.back();
         int  row = stoi(seat.substr(0, seat.size()-1));
-        cout<<col<<" "<<row<<" "<<endl;
+        LOG_DEBUG("reserved seat col=" << col << " row=" << row);
 
         if(col=='A')
             busy[0][row-1]=1;
@@ -108,14 +110,14 @@ int main(){
 
     int N=2;
     string S="1A 2F 1C"; // length N   ex: "1A 3C 2B 40G 5A"  reserverd seats
-    int num_families = solution(N,S);    
-    cout<<num_families<<endl;
+    int num_families = solution(N,S);
+    LOG_INFO("families that can be seated = " << num_families);
 
 
     N=2;
     S="1A 2F 1C 1E"; // length N   ex: "1A 3C 2B 40G 5A"  reserverd seats
-    num_families = solution(N,S);    
-    cout<<num_families<<endl;
+    num_families = solution(N,S);
+    LOG_INFO("families that can be seated = " << num_families);
     
     
     return 0;

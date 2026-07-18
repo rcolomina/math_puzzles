@@ -1,5 +1,2 @@
-
-missing_int: missing_int.cpp 
-	g++ missing_int.cpp -o occur --std=c++11
-
-
+# counting_elements — counting / bounding puzzles.
+include ../common/topic.mk

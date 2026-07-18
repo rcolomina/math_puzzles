@@ -2,6 +2,8 @@
 #include <vector>
 #include <iostream>
 
+#include "../common/log.h"
+
 using namespace std;
 
 int get_missing_element(vector<int> A){
@@ -13,10 +15,10 @@ int get_missing_element(vector<int> A){
         arraySum+= (unsigned long long int)A[i];
 
     }
-    cout<<arraySum<<endl;
-    
+    LOG_DEBUG("array sum  = " << arraySum);
+
     unsigned long long int properSum = (n+1) * (n+2) / 2;
-    cout<<properSum<<endl;    
+    LOG_DEBUG("proper sum = " << properSum);
     return (int)(properSum - arraySum);
     
 }
@@ -29,8 +31,8 @@ int main(){
         if(i!=missing)
             A.push_back(i+1);
     }
-    cout<<"A size "<<A.size()<<endl;
-    
+    LOG_DEBUG("A size " << A.size());
+
     int result = get_missing_element(A);
-    cout<<"test case big number: "<<result<<endl;
+    LOG_INFO("test case big number: missing element = " << result);
 }

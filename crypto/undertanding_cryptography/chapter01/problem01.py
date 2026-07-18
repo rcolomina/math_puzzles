@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-''' 
+'''
 1.1 The ciphertext below was encrypte using a substitution cipher. Decrypt the ciphertext without knowledge of the key
 
 lrvmnir bpr sumvbwvr jx bpr lmiwv yjeryrkbi jx qmbm wi 
@@ -40,6 +40,20 @@ Note that the text is relatively short and that the letter frequenies in it migh
 '''
 
 
+import os
+import sys
+
+# Locate the repo root (nearest ancestor holding common/) for shared logging.
+_here = os.path.dirname(os.path.abspath(__file__))
+_root = _here
+while _root != "/" and not os.path.isdir(os.path.join(_root, "common")):
+    _root = os.path.dirname(_root)
+sys.path.insert(0, _root)
+from common.log import get_logger
+
+log = get_logger(__name__)
+
+
 # 1. Computing of relatives frequency
 
 class FrequencyAnalysis:
@@ -70,15 +84,12 @@ if __name__ == "__main__":
 
     cypherText = 'lrvmnir bpr sumvbwvr jx bpr lmiwv yjeryrkbi jx qmbm wi bpr xjvni mkd ymibrut jx irhx wi bpr riirkvr jx ynbinlmtmipw utn qmumbr dj w ipmhh but bj rhnvwdmbr bpr yjeryrkbi jx bpr qmbm mvvjudwko bj yt wkbrusurbmbwjk lmird jk xjubt trmui jx ibndt wb wi kjb mk rmit bmiq bj rashmwk rmvp yjeryrkb mkd wbi iwokwxwvmkvr mkd ijyr ynib urymwk nkrashmwkrd bj ower m vjyshrbr rashmkmbwjk jkr cjnhd pmer bj lr fnmhwxwrd mkd wkiswurd bj invp mk rabrkb bpmb pr vjnhd urmvp bpr ibmbr jx rkhwopbrkrd ywkd vmsmlhr jx urvjokwgwko ijnkdhrii ijnkd mkd ipmsrhrii ipmsr w dj kjb drry ytirhx bpr xwkmh mnbpjuwbt lnb yt rasruwrkvr cwbp qmbm pmi hrxb kj djnlb bpmb bpr xjhhjcwko wi bpr sujsru msshwvmbwjk mkd wkbrusurbmbwjk w jxxru yt bprjuwri wk bpr pjsr bpmb bpr riirkvr jx jqwkmcmk qmumbr cwhh urymwk wkbmvb'
 
-    print("Cypher Text")
-    print("----")
-    print(cypherText)
-    print("----")
+    log.info("cipher text: %s", cypherText)
     f1 = FrequencyAnalysis(cypherText)
     calTableOfFreq = f1.count()
 
-    print("calculated table of frequencies on cypher text")
-    #print(calTableOfFreq)
+    log.debug("calculated table of frequencies on cipher text")
+    log.debug("frequency table: %s", calTableOfFreq)
     
     refTableOfFreq = {'a': 0.0817, 'b': 0.0150, 'c': 0.0278, \
                       'd': 0.0425, 'e': 0.1270, 'f': 0.0223, \
@@ -90,15 +101,13 @@ if __name__ == "__main__":
                       'v': 0.0098, 'w': 0.0236, 'x': 0.0015, \
                       'y': 0.0197, 'z': 0.0007}
 
-    print("Reference Table of Frequencies sorted")
+    log.debug("reference table of frequencies sorted")
     refFreqSorted = sorted(refTableOfFreq.items(), key=lambda kv:kv[1])
     refKeysSorted = [pair[0] for pair in refFreqSorted]
-    #print(refFreqSorted)
 
-    print("Calculated Table of Frequencies sorted")
+    log.debug("calculated table of frequencies sorted")
     calFreqSorted = sorted(calTableOfFreq.items(), key=lambda kv:kv[1])
-    calKeysSorted = [pair[0] for pair in calFreqSorted] 
-    #print(calFreqSorted)
+    calKeysSorted = [pair[0] for pair in calFreqSorted]
     
     # Create map to decrypt
     mapDecrypt = {}
@@ -107,8 +116,7 @@ if __name__ == "__main__":
         keyCypher= pair[1]                
         mapDecrypt[keyCypher] = keyClear
 
-    print("-------")
-    print("Appliying frequency table to try a first attempt to decypher the text")
+    log.info("applying frequency table for a first decryption attempt")
 
     def decrypt(mapDecrypt):
         clearText=""
@@ -119,15 +127,11 @@ if __name__ == "__main__":
                 clearText+=' '
         return clearText
  
-    print("-----")
-   
-    print(decrypt(mapDecrypt))
-    
+    log.info("first attempt: %s", decrypt(mapDecrypt))
+
     # Extra transpositon on mapDecrypt
-    print("-----")
-    print("After some transpositions after interpreting the results from first case above")
-    print("-----")
-    
+    log.info("refining the mapping with manual transpositions")
+
     mapDecrypt['l']='b'
     mapDecrypt['n']='u'
     mapDecrypt['j']='o'
@@ -146,8 +150,7 @@ if __name__ == "__main__":
     mapDecrypt['g']='z'
 
     
-    print(decrypt(mapDecrypt))
-    print("-----")
+    log.info("refined attempt: %s", decrypt(mapDecrypt))
 
 
     

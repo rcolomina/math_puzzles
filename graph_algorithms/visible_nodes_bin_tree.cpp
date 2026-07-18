@@ -5,6 +5,7 @@
 #include <list>
 
 #include "binary_tree.h"
+#include "../common/log.h"
 
 using namespace std;
 
@@ -61,8 +62,8 @@ TreeNode* createTreeExpression(list<int> exp){
         it!=exp.end();
         ++it)
     {
-        
-        cout<<*it<<endl;
+
+        LOG_DEBUG("expression token " << *it);
 
         if(*it == -1)
             mynodes.push(new TreeNode(-1));

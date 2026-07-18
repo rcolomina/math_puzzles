@@ -3,6 +3,8 @@
 #include <utility>
 #include <stack>
 
+#include "../common/log.h"
+
 using namespace std;
 
 int solution(vector<int> &A, vector<int> &B){
@@ -61,32 +63,32 @@ int solution_2(vector<int> &A, vector<int> &B){
 */  
     for(int i=0;i<N;i++)
     {
-        cout<<"*** current fish *** "<<i<<endl;
+        LOG_DEBUG("*** current fish *** " << i);
         if(s.empty())
         {
             s.push(i);
-            cout<<"push fish num. "<<i<<endl;
+            LOG_DEBUG("push fish num. " << i);
         }
         else
         {
             // Battle happens
             if(B[s.top()]==1 && B[i]==0)
             {
-                cout<<"Battle happens"<<endl;
+                LOG_DEBUG("Battle happens");
                 while(A[i] > A[s.top()] && B[s.top()] == 1)
                     s.pop();
 
                 if(A[i] > A[s.top()])
-                    cout<<"Wins upstream "<<i<<endl;
+                    LOG_DEBUG("Wins upstream " << i);
                 else
-                    cout<<"Wins downstream "<<s.top()<<endl;
-                
+                    LOG_DEBUG("Wins downstream " << s.top());
+
                 if(!s.empty() && B[s.top()] == 0)
-                    s.push(i);                
+                    s.push(i);
             }
             else
             {
-                cout<<"Fish pushed into stack "<<i<<endl;
+                LOG_DEBUG("Fish pushed into stack " << i);
                 s.push(i);
             }
         }
@@ -111,23 +113,23 @@ int main(){
     B={0,0,0,0,1};
     cout<<solution(A,B)<<endl;
     */    
-    cout<<solution_2(A,B)<<endl;
+    LOG_INFO("survivors = " << solution_2(A,B));
 
     A={6,3,2,1,4};
     B={1,1,1,1,1};
-    cout<<solution_2(A,B)<<endl;
+    LOG_INFO("survivors = " << solution_2(A,B));
 
     A={6,3,2,1,4};
     B={0,0,0,0,0};
-    cout<<solution_2(A,B)<<endl;
+    LOG_INFO("survivors = " << solution_2(A,B));
 
     A={6,3};
     B={0,1};
-    cout<<solution_2(A,B)<<endl;
+    LOG_INFO("survivors = " << solution_2(A,B));
 
     A={6,3};
     B={1,0};
-    cout<<solution_2(A,B)<<endl;
+    LOG_INFO("survivors = " << solution_2(A,B));
 
     
     return 0;
